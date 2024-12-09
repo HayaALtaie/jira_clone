@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الكل المهام</title>
+</head>
+<body>
+
+<h2>كل المهام</h2>
+
+<ul>
+    {% for task in tasks %}
+    <li>
+        <strong>{{ task.title }}</strong><br>
+        تخصيص إلى: {{ task.assigned_to }}<br>
+        الحالة: {{ task.status }}<br>
+        {% if task.due_date %}
+            تاريخ الاستحقاق: {{ task.due_date.strftime('%Y-%m-%d') }}<br>
+        {% else %}
+            لا يوجد تاريخ استحقاق محدد<br>
+        {% endif %}
+        
+        <form method="POST" action="{{ url_for('task.update_task', task_id=task.id) }}">
+            <label for="status">تحديث الحالة:</label>
+            <select name="status">
+                <option value="in_progress" {% if task.status == 'in_progress' %}selected{% endif %}>قيد التنفيذ</option>
+                <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>تم الإنجاز</option>
+                <option value="postponed" {% if task.status == 'postponed' %}selected{% endif %}>مؤجل</option>
+            </select>
+            <button type="submit">تحديث الحالة</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
